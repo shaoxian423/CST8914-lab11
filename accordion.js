@@ -11,20 +11,48 @@
 
 const accordionBtns = document.querySelectorAll(".accordion");
 
-accordionBtns.forEach((accordion) => {
-  accordion.onclick = function () {
-    this.classList.toggle("is-open");
+//accordionBtns.forEach((accordion) => {
+  accordionBtns.forEach((accordion, index) => {
+  //click event
+  accordion.addEventListener("click", toggleAccordion);
+  //Keyboard event
+  accordion.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleAccordion.call(accordion);
+    } else if (e.key === "ArrowDown" && index < accordionBtns.length - 1) {
+        e.preventDefault();
+        accordionBtns[index + 1].focus();
+    } else if (e.key === "ArrowUp" && index > 0) {
+        e.preventDefault();
+        accordionBtns[index - 1].focus();
+    } else if (e.key === "Home") {
+        e.preventDefault();
+        accordionBtns[0].focus();
+    } else if (e.key === "End") {
+        e.preventDefault();
+        accordionBtns[accordionBtns.length - 1].focus();
+    }
+});
+});
 
-    let content = this.nextElementSibling;
-    console.log(content);
+  //accordion.onclick = function () {
+    //this.classList.toggle("is-open");
+
+    //let content = this.nextElementSibling;
+    //console.log(content);
+    function toggleAccordion() {
+      this.classList.toggle("is-open");
+      let content = this.nextElementSibling;
 
     if (content.style.maxHeight) {
       //this is if the accordion is open
       content.style.maxHeight = null;
+      this.setAttribute("aria-expanded", "false");
     } else {
       //if the accordion is currently closed
       content.style.maxHeight = content.scrollHeight + "px";
-      console.log(content.style.maxHeight);
+      //console.log(content.style.maxHeight);
+      this.setAttribute("aria-expanded", "true");
     }
-  };
-});
+  }
